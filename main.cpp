@@ -1,9 +1,3 @@
-//Contributors
-//Vasu Patel
-//Soham Kaje
-//Aditiya Saisiva
-//Markus Perez
-
 #include <string>
 #include <vector>
 #include <algorithm>
