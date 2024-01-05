@@ -2,33 +2,11 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <iomanip>
+#include <cmath>
+#include <format>
 
-using namespace std;
-
-bool valdiateNumericInput(string input);
-void displayRREF(const vector<vector<double>>& rrefMatrix);
-void addRows(vector<vector<double>>& matrix, int targetRow, int rowToAdd, double scalar);
-bool isZeroRow(vector<vector<double>> matrix, int rowNumber);
-void multiplyRow(vector<vector<double>>& matrix, int rowNumber, int scalar);
-void swapRows(vector<vector<double>>& matrix, int numRow, int numRow2);
-bool promptForRetry();
-int promptForInteger(string prompt);
-void toRREF(vector<vector<double>>& matrix);
-void normalizeRow(vector<vector<double>>& matrix, int rowNumber, double pivotValue);
-int findPivot(vector<vector<double>>& matrix, int rowNumber);
-int findNextPivot(vector<vector<double>>& matrix, int colNumber);
-void zeroAboveAndBelow(vector<vector<double>>& matrix, int rowNumber, int colNumber);
-
-int main(){
-    // This is a test of the DisplayRREF function:
-    //vector<vector<int>> h = {{9,-2,-1,26},{-8,-1,-4,-5},{-5,-1,-2,-3}};
-    //vector<vector<double>> h = {{9,-2,-1},{-8,-1,-4},{-5,-1,-2}};
-    vector<vector<double>> h = {{0,2,1},{-2,0,1},{3,5,0}};
-    toRREF(h);
-    displayRREF(h);
-    // This is the end of the test.
-    return 0;
-}
+#include "rrefalg.h"
 
 // Display a matrix that is already in RREF form.
 // Expects the matrix to be in RREF form.
@@ -36,7 +14,12 @@ void displayRREF(const vector<vector<double>>& rrefMatrix) {
     cout << "The Reduced Row Echelon Form is:" << endl;
     for (const vector<double>& row : rrefMatrix) {
         for (const double& value : row) {
-            cout << " " << value;        
+            if (abs(value) < 0.001) {
+                cout << " " << 0; 
+            } else {
+                cout << " " << setprecision(2) << value;  
+            }
+                  
         }
         cout << endl;
     }
@@ -52,7 +35,6 @@ void toRREF(vector<vector<double>>& matrix) {
     int pivot;
     double pivotValue;
     for (int i = 0; i < numRows; i++) {
-        displayRREF(matrix);
         pivot = findPivot(matrix, i);
         if (pivot == -1 || pivot != i) {
             if (i != (numRows - 1)) {
@@ -150,53 +132,3 @@ void swapRows(vector<vector<double>>& matrix, int numRow, int numRow2) {
     matrix.at(numRow) = matrix.at(numRow2);
     matrix.at(numRow2) = temp;
 }
-
-bool promptForRetry() { //Asks user if they'd like to retry in case of failed input or operation, returns bool
-    string retry;
-    cout << "\nOperation or input failed, would you like to retry? (Y/N) ";
-    cin >> retry;
-
-    if(retry == "Y" || retry == "y")
-        return true;
-    else if(retry == "N" || retry == "n")
-        return false;
-    else //Calls function again if they input invalid response
-        return promptForRetry();
-}
-
-int promptForInteger(string prompt) {
-    string userInput;
-    bool allNumbers = true;
-    cout << endl << prompt;
-    cin >> userInput;
-
-    for(int i = 0; i < userInput.length(); i++){ //Checks for any non integer characters in userInput
-        if(!isdigit(userInput[i]))
-            allNumbers = false;
-    }
-
-    if(allNumbers) //Returns an integer conversion if userInput is all numbers
-        return stoi(userInput);
-    else //Prompts for a new input otherwise
-        return promptForInteger("Invalid input, please enter a number: ");    
-}
-
-bool valdiateNumericInput(string input) {
-    // loops through the string input
-    for (int i = 0; i < input.size(); i++) { 
-        // checks to see if the char is a number or not
-        if (isalpha(input.at(i))) { 
-            // returns false if its not a number
-            return false; 
-        }
-    }
-    // returns true if all chars are numbers
-    return true;
-} 
-
-
-  
-
-
-
-
